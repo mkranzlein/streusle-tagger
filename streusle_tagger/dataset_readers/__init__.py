@@ -1,2 +1,3 @@
+from streusle_tagger.dataset_readers.dimsum import DimsumDatasetReader
 from streusle_tagger.dataset_readers.streusle import StreusleDatasetReader
 from streusle_tagger.dataset_readers.streusle_roberta import StreusleRobertaDatasetReader

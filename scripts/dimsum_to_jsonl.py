@@ -6,16 +6,25 @@ def main(data_path, output_path):
     print(f"Reading DIMSUM data from file at: {data_path}")
     dimsum_jsonl = []
 
-    with open(data_path, "r") as data_file:
+    with open(data_path, "r", encoding="UTF-8") as data_file:
         # Group into alternative divider / sentence chunks.
         for is_divider, lines in itertools.groupby(data_file, _is_divider):
             # Ignore the divider chunks, so that `lines` corresponds to the words
             # of a single sentence.
             if not is_divider:
-                fields = [line.strip().split() for line in lines]
+                fields = [line.split("\t") for line in lines]
                 fields = [list(field) for field in zip(*fields)]
                 tokens = fields[1]
                 lemmas = fields[2]
+                bio = fields[4]
+                lex = fields[3]
+                sup = fields[7] 
+                labels = []
+                for (b, l, s) in zip(bio, lex, sup):
+                    if s == "":
+                        labels.append(f"{b}-{l}")
+                    else:
+                        labels.append(f"{b}-{l}-{s}")
                 upos_tags = ["CCONJ" if x == "CONJ" else x for x in fields[3]]
                 assert len(lemmas) == len(upos_tags)
                 # copulas were tagged as VERB in UDv1 (dimsum tagset) but are AUX in UDv2.
@@ -25,7 +34,8 @@ def main(data_path, output_path):
                 dimsum_jsonl.append({
                     "tokens": tokens,
                     "upos_tags": upos_tags,
-                    "lemmas": lemmas
+                    "lemmas": lemmas,
+                    "label": labels
                 })
 
     print(f"Writing output to {output_path}")
