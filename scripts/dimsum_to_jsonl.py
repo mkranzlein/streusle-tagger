@@ -20,6 +20,7 @@ def main(data_path, output_path):
                 lex = fields[3]
                 sup = fields[7] 
                 labels = []
+                source = fields[8]
                 for (b, l, s) in zip(bio, lex, sup):
                     if s == "":
                         labels.append(f"{b}-{l}")
@@ -35,7 +36,8 @@ def main(data_path, output_path):
                     "tokens": tokens,
                     "upos_tags": upos_tags,
                     "lemmas": lemmas,
-                    "label": labels
+                    "label": labels,
+                    "source": source
                 })
 
     print(f"Writing output to {output_path}")

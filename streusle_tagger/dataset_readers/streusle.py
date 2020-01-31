@@ -79,7 +79,8 @@ class StreusleDatasetReader(DatasetReader):
                          tokens: List[str],
                          upos_tags: List[str] = None,
                          lemmas: List[str] = None,
-                         streusle_lextags: List[str] = None) -> Instance:
+                         streusle_lextags: List[str] = None,
+                         source: List[str] = None) -> Instance:
         """
         We take `pre-tokenized` input here, because we don't have a tokenizer in this class.
 
@@ -132,7 +133,9 @@ class StreusleDatasetReader(DatasetReader):
         # Check number of LEMMAS tags equals number of tokens.
         assert len(lemmas) == len(tokens)
         metadata["lemmas"] = lemmas
-
+        
+        metadata["source"] = source
+        
         fields["metadata"] = MetadataField(metadata)
         # Add "tag label" to instance
         if streusle_lextags is not None:
